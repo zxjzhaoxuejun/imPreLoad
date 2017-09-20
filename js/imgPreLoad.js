@@ -5,25 +5,53 @@
 
 (function($) {
 	//构造函数
-
 	function PreLoad(imgs, options) {
 		this.imgs = (typeof imgs === 'string') ? [imgs] : imgs;
 		this.opts = $.extend({}, PreLoad.DEFAULTS, options);
+		
+		if(this.opts.order==='ordered'){
+			this._ordered();
+		}else{
+			this._unoredered();
+		}
 
-		this._unoredered()
 	}
 
 	PreLoad.DEFAULTS = {
+		order:'unordered',//默认无序加载，ordered
 		each: null, //每一张图片加载完毕后执行
 		all: null //所有图片加载完毕后执行
 	};
+	
+	PreLoad.prototype._ordered=function(){//有序加载
+		var imgs=this.imgs,
+			opts = this.opts,
+			count = 0,
+			len = imgs.length;
+			    load();
+				//调用图片有序加载
+				function load(){
+					var imgObj=new Image();
+					$(imgObj).on('load error',function(){
+						opts.each&&opts.each(count);
+						if(count>=len){//所有图片加载完毕
+							opts.all&&opts.all();
+						}else{//如果有没有加载完成的重新加载
+							load();
+						}
+						count++;
+					});
+
+					imgObj.src=imgs[count];
+				}
+			
+	}
 
 	PreLoad.prototype._unoredered = function() { //无序加载
 		var imgs=this.imgs,
 			opts = this.opts,
 			count = 0,
 			len = imgs.length;
-			
 			$.each(imgs,function(i,src){
 				   if(typeof src !='string') return;
 					var imgObj=new Image();//new Images对象事件

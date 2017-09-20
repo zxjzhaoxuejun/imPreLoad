@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>图片预加载之有序加载</title>
+		<script type="text/javascript" src="js/jquery-1.11.3.min.js" ></script>
+		<style>
+			html,body{
+				width: 100%;
+				height: 100%;
+			}
+			a{
+				text-decoration: none;
+			}
+			.box{
+				width: 1200px;
+				height: auto;
+				margin: 0 auto;
+			}
+			.btn{
+				height: 30px;
+				line-height: 30px;
+				display: inline-block;
+				margin-right: 20px;
+				padding: 0 10px;
+				color: #333;
+				background: #fff;
+				border: 1px solid #ccc;
+			}
+			
+			.btn:hover{
+				background: #eee;
+			}
+			
+			
+		</style>
+	</head>
+	<body>
+		
+		<div class="box">
+			<img src="http://bpic.588ku.com/back_pic/04/72/12/68589c2e3df28a2.jpg!/fh/300/quality/90/unsharp/true/compress/true" alt="pic" id="img" width="1200" />
+			<p>
+				<a href="javascript:;" class="btn" data-control="prev">上一页</a>
+				<a href="javascript:;" class="btn" data-control="next">下一页</a>
+			</p>
+		</div>
+		
+		<script type="text/javascript" src="js/imgPreLoad.js" ></script>
+		<script>
+			
+			var imgs=[
+			"http://bpic.588ku.com/back_pic/04/72/12/68589c2e3df28a2.jpg!/fh/300/quality/90/unsharp/true/compress/true",
+			"http://bpic.588ku.com/back_pic/04/64/05/8358738cefc7d06.jpg!/fh/300/quality/90/unsharp/true/compress/true",
+			"http://bpic.588ku.com/back_pic/04/62/59/40586fb8ea1cff3.jpg!/fh/300/quality/90/unsharp/true/compress/true",
+			"http://bpic.588ku.com/back_pic/04/60/88/68586db9543f4d3.jpg!/fh/300/quality/90/unsharp/true/compress/true",
+			"http://bpic.588ku.com/back_pic/04/50/08/15585c91b38a772.jpg",
+			"http://bpic.588ku.com/back_pic/04/31/85/245842d5561b7e9.jpg",
+			"http://bpic.588ku.com/back_pic/00/14/61/395662ec1c37e66.jpg",
+			"http://bpic.588ku.com/back_pic/02/50/81/07577f21890e298.jpg",
+			"http://bpic.588ku.com/back_pic/02/50/81/36577f249ae014d.jpg",
+			"http://bpic.588ku.com/back_pic/03/63/48/0557ac31631edd9.jpg"
+			];
+			
+			var index=0,
+				len=imgs.length;
+			
+			//调用预加载方法
+            $.preload(imgs,{
+            	order:'ordered'
+            })
+ 	
+			$('.btn').on('click',function(){
+				if("prev"===$(this).data('control')){//上一页
+					index=Math.max(0,--index);//和0比较取最大的值
+				}else{//下一页
+					index=Math.min(len-1,++index);//和数组长度比较取最小的值
+				}
+				$('#img').attr('src',imgs[index]);
+				document.title=(index+1) + '/' +len;
+				
+			})
+			
+			
+		</script>
+	</body>
+</html>
